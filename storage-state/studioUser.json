@@ -1,0 +1,197 @@
+{
+  "cookies": [
+    {
+      "name": "__cf_bm",
+      "value": "S_mRt3BcqtBIjGkaOfrXWXkYIAZ1ALcmwhaz70zB21A-1755501557-1.0.1.1-Pjap93dA6GZa_K1ACPs4uOxplE_v6ssN8HNLDD2ker6QQ55A.9pxOq0ua5va1pEsTyzEqOl9gMkckxRVGeHOZt3bff7SvlhS9_M69RZ2z90",
+      "domain": ".hs-scripts.com",
+      "path": "/",
+      "expires": 1755503357.895124,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "__cf_bm",
+      "value": "2kh.7_qzT9VoZhbYmoVuisPvs648IrEEoEf2xyDWKYI-1755501558-1.0.1.1-c75zklurpRz9dcbQgEapNBN9sx2w9Oj0_JWKLVeC3e3Kqre5GyjGk9MlUqylp.GCGJBdb9XIFyTDDMFYH5xbboGujReyCyrZmj5.8nY_IOs",
+      "domain": ".hs-analytics.net",
+      "path": "/",
+      "expires": 1755503358.12938,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "__cf_bm",
+      "value": "0O3ON.S2lei1DUfqDlXP0x_C6hRyRVKhFKZguOf58Jk-1755501558-1.0.1.1-YrItqHw15LAGgjhr_UX0ZeZI1q._dRYrpnlqWS4k911rXdnxkzeLPHXHuyOyxqwAGR2itfhdl0PEwfhSE0toPylop5fwCApknzIHjeoD8ew",
+      "domain": ".hs-banner.com",
+      "path": "/",
+      "expires": 1755503358.173475,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "__hstc",
+      "value": "203209230.1aa4b9e70a221174f78a51d8b8dd095c.1755501558181.1755501558181.1755501558181.1",
+      "domain": ".fliplet.com",
+      "path": "/",
+      "expires": 1771053558,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "hubspotutk",
+      "value": "1aa4b9e70a221174f78a51d8b8dd095c",
+      "domain": ".fliplet.com",
+      "path": "/",
+      "expires": 1771053558,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "__hssrc",
+      "value": "1",
+      "domain": ".fliplet.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "__hssc",
+      "value": "203209230.1.1755501558181",
+      "domain": ".fliplet.com",
+      "path": "/",
+      "expires": 1755503358,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "__cf_bm",
+      "value": "BkeA7q8G88XWadGbcJbe0aDc7Ec5NBedgBOFZWLkvpg-1755501558-1.0.1.1-.VQcreAg9.a_cKkHbykKZX5gQ4XkfLCy1G5a0THB3n.peEVQquUmOhkkESL0bQb4xlU8BkJWHQpR.LMYflf6bddWV0CwfZzHN4e0YeZQ8gI",
+      "domain": ".hsforms.com",
+      "path": "/",
+      "expires": 1755503358.446238,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "_cfuvid",
+      "value": "iL2Nyhi1cvD5ldN56CdSSozMOHkGkqGoEFuEK_L2a5Q-1755501558371-0.0.1.1-604800000",
+      "domain": ".hsforms.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "__cf_bm",
+      "value": "At51cupfMOiYs.BEA4IIfl5R48V4KbiAstiZNT.pU10-1755501558-1.0.1.1-F4B4ww45PvPlgI.K1Wp4QpoDca8qvWXSP8cGsL9i.1G8r2eIhbSQgm80wOytyVYO7yjPA1tw4AxTX_NTXX1DDzacVV0q1vFlhQqMBVMul0c",
+      "domain": ".hubspot.com",
+      "path": "/",
+      "expires": 1755503358.487942,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "_cfuvid",
+      "value": "FEGHnQOF8iPtAmnXicGwo4b4e.j5TlfsV1dWSLjXb6M-1755501558412-0.0.1.1-604800000",
+      "domain": ".hubspot.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "intercom-id-eo99qllm",
+      "value": "9d03ab6f-fe3a-4231-a3df-ac800823bdf1",
+      "domain": ".fliplet.com",
+      "path": "/",
+      "expires": 1778831559,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "intercom-session-eo99qllm",
+      "value": "",
+      "domain": ".fliplet.com",
+      "path": "/",
+      "expires": 1756106359,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "intercom-device-id-eo99qllm",
+      "value": "0ddd73b8-1f9a-44eb-9bd9-985a5e0b979d",
+      "domain": ".fliplet.com",
+      "path": "/",
+      "expires": 1778831559,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "deviceUuid",
+      "value": "075684d6-4194-462b-b65b-439f47144adc",
+      "domain": "staging.api.fliplet.com",
+      "path": "/",
+      "expires": 1787037560.782117,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "auth_token",
+      "value": "ZXUtLXNlc3Npb24tLWExZGFhZDU3MTY0YTRmM2E5ZGE0YWEwYTBmNDQ2Nzk5LTQ4NC0zMzEtODQ4MA%3D%3D",
+      "domain": "staging.api.fliplet.com",
+      "path": "/",
+      "expires": 1758093561.621773,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "_auth_token",
+      "value": "eu--session--a1daad57164a4f3a9da4aa0a0f446799-484-331-8480",
+      "domain": "staging.studio.fliplet.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Strict"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "https://staging.studio.fliplet.com",
+      "localStorage": [
+        {
+          "name": "intercom.intercom-state-eo99qllm",
+          "value": "{\"app\":{\"openConfig\":{\"layout\":\"default\",\"unifiedStyling\":true,\"openTo\":\"home\",\"spaces\":[{\"type\":\"home\",\"label\":\"Home\",\"navigationLabel\":\"Home\",\"badge\":null},{\"type\":\"messages\",\"label\":\"Messages\",\"navigationLabel\":\"Messages\",\"badge\":null},{\"type\":\"tickets\",\"label\":\"Tickets\",\"navigationLabel\":\"Tickets\",\"badge\":null},{\"type\":\"tasks\",\"label\":\"Tasks\",\"navigationLabel\":\"Tasks\",\"badge\":null}],\"userHasReceivedChecklists\":false,\"userHasLiveNewsfeed\":false,\"userHasTickets\":false},\"selfServeSuggestionsMatch\":false,\"name\":\"Fliplet\",\"features\":{\"anonymousInboundMessages\":true,\"googleAnalytics\":false,\"hubspotInstalled\":true,\"inboundMessages\":true,\"marketoEnrichmentInstalled\":false,\"googleAnalytics4Integration\":true},\"helpCenterSiteUrl\":\"http://help.fliplet.com\",\"inboundConversationsDisabled\":false,\"isDeveloperWorkspace\":false,\"customGoogleAnalyticsTrackerId\":null},\"launcher\":{\"isLauncherEnabled\":true},\"launcherDiscoveryMode\":{\"hasDiscoveredLauncher\":false},\"launcherSettings\":{\"alignment\":\"right\",\"color\":\"#00abd1\",\"colorDark\":\"#00abd1\",\"hasRequiredFeatures\":true,\"horizontalPadding\":20,\"instantBootEnabled\":true,\"launcherLogoUrl\":null,\"launcherLogoDarkUrl\":null,\"secondaryColor\":\"#f2f6f7\",\"secondaryColorDark\":\"#f2f6f7\",\"showLauncher\":true,\"themeMode\":\"light\",\"updatedAt\":1755489780,\"verticalPadding\":20,\"isLoading\":false},\"user\":{\"role\":\"visitor\",\"locale\":\"en\",\"hasConversations\":false},\"message\":{},\"conversations\":{\"byId\":{}},\"openOnBoot\":{\"type\":null,\"metadata\":{},\"lastOpenAtTimestamp\":1755501561858},\"operator\":{\"lastComposerEvent\":0},\"router\":{\"isInitialized\":false,\"navigationQueue\":[]}}"
+        },
+        {
+          "name": "li_submission",
+          "value": "{\"formSelectorId\":\"\",\"formSelectorClasses\":\".form-signin\",\"formAttributes\":{\"id\":null,\"class\":\"form-signin\",\"action\":null},\"contactFields\":{\"email\":{\"label\":\"Email address\",\"name\":\"\",\"value\":\"ikolosov+aqa@fliplet.com\",\"type\":\"text\",\"attributes\":{}}},\"fields\":[{\"label\":\"Keep me logged in\",\"name\":\"\",\"value\":\"Not Checked\",\"type\":\"checkbox\",\"attributes\":{}}],\"pageTitle\":\"Sign in to Fliplet Studio\",\"pageUrl\":\"https://staging.studio.fliplet.com/signin\",\"portalId\":145578212,\"token\":-1502106109,\"type\":\"SCRAPED\",\"utk\":\"1aa4b9e70a221174f78a51d8b8dd095c\",\"uuid\":\"9b95e6be-fa82-403c-ab82-2e00036ef6c3\",\"version\":\"collected-forms-embed-js-static-1.3513\"}"
+        },
+        {
+          "name": "userpilotSDK757034438",
+          "value": "{\"userpilot-un-id\":\"40uq58t3_34087353590616420\",\"userpilotUserId757034438\":\"eu-126636-292\",\"userpilotIdentifiedObj757034438\":\"{\\\"firstname\\\":\\\"Illia\\\",\\\"lastname\\\":\\\"Kolosov\\\",\\\"company\\\":{\\\"id\\\":\\\"eu-292\\\",\\\"name\\\":\\\"Fliplet\\\",\\\"region\\\":\\\"eu\\\"},\\\"name\\\":\\\"Illia Kolosov\\\",\\\"firstName\\\":\\\"Illia\\\",\\\"lastName\\\":\\\"Kolosov\\\",\\\"email\\\":\\\"ikolosov+aqa@fliplet.com\\\",\\\"company_name\\\":\\\"Fliplet\\\",\\\"org_id\\\":\\\"292\\\",\\\"org_type\\\":\\\"paying\\\",\\\"org_plan\\\":\\\"enterprise\\\",\\\"org_size\\\":\\\"1\\\",\\\"org_industry\\\":\\\"Education\\\",\\\"org_admin\\\":\\\"No\\\",\\\"org_self_paying\\\":\\\"Yes\\\",\\\"internal_organisation\\\":\\\"true\\\",\\\"region\\\":\\\"eu\\\",\\\"signed_up\\\":\\\"2025-08-04T15:29:29.139Z\\\",\\\"verified\\\":true,\\\"user_total_apps\\\":0,\\\"total_published_apps\\\":0,\\\"user_build_intent\\\":\\\"undefined\\\",\\\"user_app_size\\\":\\\"undefined\\\",\\\"user_app_type\\\":\\\"Single Event\\\",\\\"user_builders_experience\\\":\\\"undefined\\\",\\\"user_design_experience\\\":\\\"undefined\\\",\\\"user_coding_experience\\\":\\\"undefined\\\",\\\"user_data_experience\\\":\\\"undefined\\\",\\\"user_booked_call\\\":\\\"undefined\\\",\\\"user_invite_reasons\\\":\\\"Test an app\\\",\\\"userAppPlans\\\":\\\"\\\",\\\"signupSource\\\":\\\"invite\\\",\\\"isImpersonating\\\":\\\"No\\\",\\\"go_experiments\\\":[]}\"}"
+        },
+        {
+          "name": "_analytics_session",
+          "value": "{\"id\":\"f44fbf27-20ca-5b3e-4bfc-bb976c33311b\",\"createdAt\":1755501561877}"
+        }
+      ]
+    }
+  ]
+}

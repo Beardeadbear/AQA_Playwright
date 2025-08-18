@@ -1,0 +1,306 @@
+import { test, expect } from '@playwright/test';
+import { StudioAppsPage } from '../../page-objects/apps/studio-apps.page';
+import { enhancedDragAndDrop } from '../../core/drag-and-drop';
+import { WIDGETS } from '../../constants/widgets';
+
+test.describe('AI Feature Component - Accessibility Tests', () => {
+    let studioAppsPage: StudioAppsPage;
+
+    test.beforeEach(async ({ page }) => {
+        studioAppsPage = new StudioAppsPage(page);
+        await studioAppsPage.goto();
+        
+        const appLink = page.getByRole('link', { name: /AI-Test-App/ });
+        await appLink.waitFor({ state: 'visible' });
+        await appLink.click();
+        
+        await page.waitForSelector('#preview');
+        
+        // Add AI component for all tests
+        await enhancedDragAndDrop(page, WIDGETS.AI_FEATURE.package, {
+            usePackageSelection: true,
+            verbose: false
+        });
+    });
+
+    test('ARIA roles: form, inputs, toasts', async ({ page }) => {
+        // Generate a form to test ARIA roles
+        const promptInput = page.getByPlaceholder(/Enter your prompt/i);
+        await promptInput.fill('Create a contact form with proper ARIA roles');
+        
+        const saveGenerateButton = page.getByRole('button', { name: /Save & Generate/i });
+        await saveGenerateButton.click();
+        
+        await page.waitForSelector('.generated-code', { state: 'visible' });
+        
+        // Switch to preview
+        const previewTab = page.getByRole('tab', { name: /Preview/i });
+        await previewTab.click();
+        
+        // Verify form has proper ARIA role
+        const form = page.getByRole('form');
+        await expect(form).toBeVisible();
+        
+        // Verify inputs have proper ARIA attributes
+        const nameInput = page.getByLabel(/Name/i);
+        await expect(nameInput).toHaveAttribute('aria-required', 'true');
+        
+        const emailInput = page.getByLabel(/Email/i);
+        await expect(emailInput).toHaveAttribute('aria-invalid', 'false');
+        
+        // Verify toast has proper ARIA role
+        const submitButton = page.getByRole('button', { name: /Submit/i });
+        await submitButton.click();
+        
+        const toast = page.getByRole('alert');
+        await expect(toast).toBeVisible();
+    });
+
+    test('Labels linked to inputs', async ({ page }) => {
+        // Generate a form to test label associations
+        const promptInput = page.getByPlaceholder(/Enter your prompt/i);
+        await promptInput.fill('Create a form with properly labeled inputs');
+        
+        const saveGenerateButton = page.getByRole('button', { name: /Save & Generate/i });
+        await saveGenerateButton.click();
+        
+        await page.waitForSelector('.generated-code', { state: 'visible' });
+        
+        // Switch to preview
+        const previewTab = page.getByRole('tab', { name: /Preview/i });
+        await previewTab.click();
+        
+        // Verify labels are properly associated with inputs
+        const nameLabel = page.getByText(/Name/i);
+        const nameInput = page.getByLabel(/Name/i);
+        
+        // Check that label and input are associated
+        const nameLabelFor = await nameLabel.getAttribute('for');
+        const nameInputId = await nameInput.getAttribute('id');
+        expect(nameLabelFor).toBe(nameInputId);
+        
+        // Verify email label association
+        const emailLabel = page.getByText(/Email/i);
+        const emailInput = page.getByLabel(/Email/i);
+        
+        const emailLabelFor = await emailLabel.getAttribute('for');
+        const emailInputId = await emailInput.getAttribute('id');
+        expect(emailLabelFor).toBe(emailInputId);
+    });
+
+    test('Tab order + focus indicator', async ({ page }) => {
+        // Generate a form to test tab order
+        const promptInput = page.getByPlaceholder(/Enter your prompt/i);
+        await promptInput.fill('Create a form with logical tab order');
+        
+        const saveGenerateButton = page.getByRole('button', { name: /Save & Generate/i });
+        await saveGenerateButton.click();
+        
+        await page.waitForSelector('.generated-code', { state: 'visible' });
+        
+        // Switch to preview
+        const previewTab = page.getByRole('tab', { name: /Preview/i });
+        await previewTab.click();
+        
+        // Test tab order
+        await page.keyboard.press('Tab');
+        
+        // First focus should be on name input
+        const nameInput = page.getByLabel(/Name/i);
+        await expect(nameInput).toBeFocused();
+        
+        // Verify focus indicator is visible
+        await expect(nameInput).toHaveCSS('outline', /2px solid/);
+        
+        // Tab to next element
+        await page.keyboard.press('Tab');
+        
+        // Second focus should be on email input
+        const emailInput = page.getByLabel(/Email/i);
+        await expect(emailInput).toBeFocused();
+        
+        // Tab to submit button
+        await page.keyboard.press('Tab');
+        
+        const submitButton = page.getByRole('button', { name: /Submit/i });
+        await expect(submitButton).toBeFocused();
+    });
+
+    test('Announce validation errors (aria-live)', async ({ page }) => {
+        // Generate a form to test validation announcements
+        const promptInput = page.getByPlaceholder(/Enter your prompt/i);
+        await promptInput.fill('Create a form with validation error announcements');
+        
+        const saveGenerateButton = page.getByRole('button', { name: /Save & Generate/i });
+        await saveGenerateButton.click();
+        
+        await page.waitForSelector('.generated-code', { state: 'visible' });
+        
+        // Switch to preview
+        const previewTab = page.getByRole('tab', { name: /Preview/i });
+        await previewTab.click();
+        
+        // Try to submit without filling required fields
+        const submitButton = page.getByRole('button', { name: /Submit/i });
+        await submitButton.click();
+        
+        // Verify validation errors are announced
+        const validationRegion = page.locator('[aria-live="polite"]');
+        await expect(validationRegion).toBeVisible();
+        
+        // Verify error messages are within the live region
+        const nameError = page.getByText(/Name is required/i);
+        await expect(nameError).toBeVisible();
+        
+        const emailError = page.getByText(/Email is required/i);
+        await expect(emailError).toBeVisible();
+    });
+
+    test('Announce success messages', async ({ page }) => {
+        // Generate a form to test success announcements
+        const promptInput = page.getByPlaceholder(/Enter your prompt/i);
+        await promptInput.fill('Create a form with success message announcements');
+        
+        const saveGenerateButton = page.getByRole('button', { name: /Save & Generate/i });
+        await saveGenerateButton.click();
+        
+        await page.waitForSelector('.generated-code', { state: 'visible' });
+        
+        // Switch to preview
+        const previewTab = page.getByRole('tab', { name: /Preview/i });
+        await previewTab.click();
+        
+        // Fill the form
+        const nameInput = page.getByLabel(/Name/i);
+        await nameInput.fill('John Doe');
+        
+        const emailInput = page.getByLabel(/Email/i);
+        await emailInput.fill('john@example.com');
+        
+        // Submit the form
+        const submitButton = page.getByRole('button', { name: /Submit/i });
+        await submitButton.click();
+        
+        // Verify success message is announced
+        const successRegion = page.locator('[aria-live="polite"]');
+        await expect(successRegion).toBeVisible();
+        
+        const successMessage = page.getByText(/Form submitted successfully/i);
+        await expect(successMessage).toBeVisible();
+    });
+
+    test('WCAG color contrast', async ({ page }) => {
+        // Generate a form to test color contrast
+        const promptInput = page.getByPlaceholder(/Enter your prompt/i);
+        await promptInput.fill('Create a form with WCAG compliant color contrast');
+        
+        const saveGenerateButton = page.getByRole('button', { name: /Save & Generate/i });
+        await saveGenerateButton.click();
+        
+        await page.waitForSelector('.generated-code', { state: 'visible' });
+        
+        // Switch to preview
+        const previewTab = page.getByRole('tab', { name: /Preview/i });
+        await previewTab.click();
+        
+        // Test text color contrast
+        const nameLabel = page.getByText(/Name/i);
+        const labelColor = await nameLabel.evaluate(el => {
+            const style = window.getComputedStyle(el);
+            return style.color;
+        });
+        
+        // Test background color contrast
+        const formBackground = await page.locator('form').evaluate(el => {
+            const style = window.getComputedStyle(el);
+            return style.backgroundColor;
+        });
+        
+        // Verify sufficient contrast (this would need a proper contrast calculation)
+        // For now, we'll verify that colors are not the same
+        expect(labelColor).not.toBe(formBackground);
+        
+        // Test error message contrast
+        const submitButton = page.getByRole('button', { name: /Submit/i });
+        await submitButton.click();
+        
+        const errorMessage = page.getByText(/Name is required/i);
+        const errorColor = await errorMessage.evaluate(el => {
+            const style = window.getComputedStyle(el);
+            return style.color;
+        });
+        
+        // Error messages should have sufficient contrast
+        expect(errorColor).not.toBe('rgb(255, 255, 255)'); // Should not be white on white
+    });
+
+    test('Keyboard navigation for all interactive elements', async ({ page }) => {
+        // Generate a form to test keyboard navigation
+        const promptInput = page.getByPlaceholder(/Enter your prompt/i);
+        await promptInput.fill('Create a form with full keyboard navigation support');
+        
+        const saveGenerateButton = page.getByRole('button', { name: /Save & Generate/i });
+        await saveGenerateButton.click();
+        
+        await page.waitForSelector('.generated-code', { state: 'visible' });
+        
+        // Switch to preview
+        const previewTab = page.getByRole('tab', { name: /Preview/i });
+        await previewTab.click();
+        
+        // Test that all interactive elements are keyboard accessible
+        const interactiveElements = [
+            page.getByLabel(/Name/i),
+            page.getByLabel(/Email/i),
+            page.getByRole('button', { name: /Submit/i })
+        ];
+        
+        for (const element of interactiveElements) {
+            // Tab to element
+            await page.keyboard.press('Tab');
+            
+            // Verify element is focused
+            await expect(element).toBeFocused();
+            
+            // Verify element is keyboard accessible
+            await expect(element).toHaveAttribute('tabindex', /0|-1/);
+        }
+    });
+
+    test('Screen reader compatibility', async ({ page }) => {
+        // Generate a form to test screen reader compatibility
+        const promptInput = page.getByPlaceholder(/Enter your prompt/i);
+        await promptInput.fill('Create a form with screen reader support');
+        
+        const saveGenerateButton = page.getByRole('button', { name: /Save & Generate/i });
+        await saveGenerateButton.click();
+        
+        await page.waitForSelector('.generated-code', { state: 'visible' });
+        
+        // Switch to preview
+        const previewTab = page.getByRole('tab', { name: /Preview/i });
+        await previewTab.click();
+        
+        // Verify form has proper ARIA landmarks
+        const main = page.getByRole('main');
+        await expect(main).toBeVisible();
+        
+        // Verify form has proper heading structure
+        const heading = page.getByRole('heading');
+        await expect(heading).toBeVisible();
+        
+        // Verify inputs have proper ARIA descriptions
+        const nameInput = page.getByLabel(/Name/i);
+        await expect(nameInput).toHaveAttribute('aria-describedby');
+        
+        // Verify error messages are properly associated
+        const submitButton = page.getByRole('button', { name: /Submit/i });
+        await submitButton.click();
+        
+        const nameError = page.getByText(/Name is required/i);
+        const nameErrorId = await nameError.getAttribute('id');
+        const nameInputDescribedBy = await nameInput.getAttribute('aria-describedby');
+        
+        expect(nameInputDescribedBy).toContain(nameErrorId);
+    });
+}); 

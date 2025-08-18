@@ -1,0 +1,137 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/node:8.9.1
+
+      # Manually created and published to Docker Hub image which contains selenium image and files for uploading during tests
+      - image: dockeridqa/selenium-chrome-with-file:$DOCKER_IMAGE_VERSION_QA
+        auth:
+          username: dockeridqa
+          password: $DOCKER_PASSWORD
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - dependencies-{{ checksum "package.json" }}
+      - run: sudo npm install
+      - run: sudo npm install -g nightwatch-html-reporter
+      - save_cache:
+          paths:
+            - node_modules
+          key: dependencies-{{ checksum "package.json" }}
+      - run: sudo npm link
+      - run:
+          name: Running Fliplet e2e tests
+          command: sleep 5s && fliplet-e2e-tests --suiteRetries 2 --skipgroup browserLogs,cleanup,deprecated,strategyForRun -w https://staging.studio.fliplet.com -p $PASSWORD
+      - run:
+          name: Generate html reporter. Please find it in Artifacts as generatedReport.html
+          command: sudo nightwatch-html-reporter -d ./reports -b false
+          when: always
+      - run:
+          name: Browser console logs captured during test runs
+          command: fliplet-e2e-tests tests/browserLogs/printBrowserConsoleLogs.js -w https://staging.studio.fliplet.com -p $PASSWORD
+          when: always
+      - run:
+          name: Remove apps and data sources used in tests 1 part
+          command: fliplet-e2e-tests tests/cleanup/removeTrashAppsAndDataSourcesForTestAccountEmail1.js -w https://staging.studio.fliplet.com -p $PASSWORD
+          when: always
+      - run:
+          name: Remove apps and data sources used in tests 2 part
+          command: fliplet-e2e-tests tests/cleanup/removeTrashAppsAndDataSourcesForTestAccountEmail3.js -w https://staging.studio.fliplet.com -p $PASSWORD
+          when: always
+      - run:
+          name: Define and change dnd for the next test run
+          command: sleep 5s && fliplet-e2e-tests tests/strategyForRun/dndStrategy.js -w https://staging.studio.fliplet.com -p $PASSWORD
+          when: always
+      - store_artifacts:
+          path: ./screenshots
+      - store_artifacts:
+          path: ./reports
+
+  daily_tests:
+    docker:
+      - image: circleci/node:8.9.1
+
+      # Manually created and published to Docker Hub image which contains selenium image and files for uploading during tests
+      - image: dockeridqa/selenium-chrome-with-file:$DOCKER_IMAGE_VERSION_QA
+        auth:
+          username: dockeridqa
+          password: $DOCKER_PASSWORD
+    environment:
+      SMOKE_TEST: false
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - dependencies-{{ checksum "package.json" }}
+      - run: sudo npm install
+      - run: sudo npm install -g nightwatch-html-reporter
+      - save_cache:
+          paths:
+            - node_modules
+          key: dependencies-{{ checksum "package.json" }}
+      - run: sudo npm link
+      - run:
+          name: Running Fliplet e2e tests
+          command: sleep 5s && fliplet-e2e-tests --suiteRetries 2 --skipgroup browserLogs,cleanup,deprecated,strategyForRun -w https://staging.studio.fliplet.com -p $PASSWORD
+      - run:
+          name: Generate html reporter. Please find it in Artifacts as generatedReport.html
+          command: sudo nightwatch-html-reporter -d ./reports -b false
+          when: always
+      - run:
+          name: Browser console logs captured during test runs
+          command: fliplet-e2e-tests tests/browserLogs/printBrowserConsoleLogs.js -w https://staging.studio.fliplet.com -p $PASSWORD
+          when: always
+      - run:
+          name: Remove apps and data sources used in tests 1 part
+          command: fliplet-e2e-tests tests/cleanup/removeTrashAppsAndDataSourcesForTestAccountEmail1.js -w https://staging.studio.fliplet.com -p $PASSWORD
+          when: always
+      - run:
+          name: Remove apps and data sources used in tests 2 part
+          command: fliplet-e2e-tests tests/cleanup/removeTrashAppsAndDataSourcesForTestAccountEmail3.js -w https://staging.studio.fliplet.com -p $PASSWORD
+          when: always
+      - run:
+          name: Define and change dnd for the next test run
+          command: sleep 5s && fliplet-e2e-tests tests/strategyForRun/dndStrategy.js -w https://staging.studio.fliplet.com -p $PASSWORD
+          when: always
+      - store_artifacts:
+          path: ./screenshots
+      - store_artifacts:
+          path: ./reports
+
+workflows:
+  version: 2
+  commit:
+    jobs:
+      - daily_tests
+
+  daily_e2e_tests:
+    triggers:
+      - schedule:
+          cron: "0 12 * * *"
+          filters:
+            branches:
+              only:
+                - development
+    jobs:
+      - daily_tests
+
+  nightly_e2e_tests:
+    triggers:
+      - schedule:
+          # Run every Tuesday night before we deploy on Wednesday
+          cron: "30 22 * * 2"
+          filters:
+            branches:
+              only:
+                - development
+    jobs:
+      - daily_tests
+
+notify:
+  branches:
+    only:
+      - development
+  webhooks:
+    - url: https://api.fliplet.com/v1/widgets/fliplet-e2e-tests-callback

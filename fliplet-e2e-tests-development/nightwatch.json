@@ -1,0 +1,72 @@
+{
+  "src_folders" : ["tests"],
+  "output_folder" : "reports",
+  "custom_commands_path" : [
+    "custom-commands",
+    "custom-commands/cleaningUp",
+    "custom-commands/dragAndDropCommands",
+    "custom-commands/apiCommands",
+    "custom-commands/creatingDataSourceCommands",
+    "custom-commands/thirdPartyAppCommands",
+    "custom-commands/elementAssertionCommands",
+    "custom-commands/switchToFrameCommands",
+    "custom-commands/waitForConditionCommands"
+  ],
+  "custom_assertions_path" : "",
+  "page_objects_path" : "page-objects",
+  "globals_path" : "globals_path.js",
+
+  "selenium" : {
+    "start_process" : false,
+    "server_path" : "",
+    "log_path" : "",
+    "port" : 4444,
+    "cli_args" : {
+      "webdriver.chrome.driver" : "",
+      "webdriver.gecko.driver" : "",
+      "webdriver.edge.driver" : ""
+    }
+  },
+
+  "test_settings" : {
+    "default" : {
+      "launch_url" : "https://staging.studio.fliplet.com/",
+      "selenium_port"  : 4444,
+      "selenium_host"  : "localhost",
+      "silent": true,
+      "retryAssertionTimeout": 10000,
+      "end_session_on_fail" : false,
+      "screenshots" : {
+        "enabled" : true,
+        "on_failure" : true,
+        "on_error" : true,
+        "path" : "./screenshots"
+      },
+      "desiredCapabilities": {
+        "browserName": "chrome",
+        "args": [
+          "headless",
+          "ignore-certificate-errors"
+        ]
+      }
+    },
+
+    "firefox": {
+      "desiredCapabilities": {
+        "browserName": "firefox",
+        "marionette": true
+      }
+    },
+
+    "edge" : {
+      "desiredCapabilities": {
+        "browserName": "MicrosoftEdge"
+      }
+    }
+  },
+
+  "test_workers": {
+    "enabled": true,
+    "workers": 4
+  }
+}

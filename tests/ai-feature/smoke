@@ -1,0 +1,284 @@
+import { test, expect } from '@playwright/test';
+import { StudioAppsPage } from '../../page-objects/apps/studio-apps.page';
+import { EditAppPage } from '../../page-objects/apps/edit-app.page';
+import { enhancedDragAndDrop, getComponentCount, waitForComponentAdded } from '../../core/drag-and-drop';
+import { WIDGETS } from '../../constants/widgets';
+
+test.describe('AI Feature Component - Smoke Tests', () => {
+    let studioAppsPage: StudioAppsPage;
+    let editAppPage: EditAppPage;
+
+    test.beforeEach(async ({ page }) => {
+        studioAppsPage = new StudioAppsPage(page);
+        editAppPage = new EditAppPage(page);
+        
+        await studioAppsPage.goto();
+        
+        const appLink = page.getByRole('link', { name: /AI-Test-App/ });
+        await appLink.waitFor({ state: 'visible' });
+        await appLink.click();
+        
+        await editAppPage.waitForPageLoad();
+    });
+
+    test('Drag AI Feature component', async ({ page }) => {
+        const initialCount = await getComponentCount(page);
+        
+        const success = await enhancedDragAndDrop(page, WIDGETS.AI_FEATURE.package, {
+            usePackageSelection: true,
+            verbose: false
+        });
+        
+        expect(success).toBe(true);
+        
+        const componentAdded = await waitForComponentAdded(page, initialCount);
+        expect(componentAdded).toBe(true);
+        
+        const finalCount = await getComponentCount(page);
+        expect(finalCount).toBeGreaterThan(initialCount);
+        
+        const frame = editAppPage.getPreviewFrame();
+        const aiComponentInIframe = frame.locator('[data-widget-package="com.fliplet.ai-feature-dev"]');
+        await expect(aiComponentInIframe).toBeVisible();
+    });
+
+    test('Enhance prompt → generate form', async ({ page }) => {
+        // Add component first
+        const initialCount = await getComponentCount(page);
+        await enhancedDragAndDrop(page, WIDGETS.AI_FEATURE.package, {
+            usePackageSelection: true,
+            verbose: false
+        });
+        
+        const componentAdded = await waitForComponentAdded(page, initialCount);
+        expect(componentAdded).toBe(true);
+        
+        // Click on the component to open settings
+        const frame = editAppPage.getPreviewFrame();
+        const aiComponent = frame.locator('[data-widget-package="com.fliplet.ai-feature-dev"]');
+        await aiComponent.click();
+        
+        // Wait for settings panel to open
+        await page.waitForSelector('.fl-widget-instance-settings');
+        
+        // Find and click the "Enhance Prompt" button
+        const enhancePromptButton = page.getByRole('button', { name: /Enhance Prompt/i });
+        await expect(enhancePromptButton).toBeVisible();
+        await enhancePromptButton.click();
+        
+        // Fill in the prompt enhancement form
+        const coreGoalInput = page.getByLabel(/Core Goal/i);
+        await coreGoalInput.fill('Create a user registration form');
+        
+        const contextInput = page.getByLabel(/Context/i);
+        await contextInput.fill('For a mobile app with user authentication');
+        
+        const saveButton = page.getByRole('button', { name: /Save & Generate/i });
+        await saveButton.click();
+        
+        // Wait for form generation
+        await page.waitForSelector('.generated-form', { state: 'visible' });
+        
+        // Verify form was generated
+        const generatedForm = page.locator('.generated-form');
+        await expect(generatedForm).toBeVisible();
+    });
+
+    test('Submit generated form', async ({ page }) => {
+        // Add component and generate form first
+        const initialCount = await getComponentCount(page);
+        await enhancedDragAndDrop(page, WIDGETS.AI_FEATURE.package, {
+            usePackageSelection: true,
+            verbose: false
+        });
+        
+        const componentAdded = await waitForComponentAdded(page, initialCount);
+        expect(componentAdded).toBe(true);
+        
+        // Generate form
+        const frame = editAppPage.getPreviewFrame();
+        const aiComponent = frame.locator('[data-widget-package="com.fliplet.ai-feature-dev"]');
+        await aiComponent.click();
+        
+        await page.waitForSelector('.fl-widget-instance-settings');
+        
+        const enhancePromptButton = page.getByRole('button', { name: /Enhance Prompt/i });
+        await enhancePromptButton.click();
+        
+        const coreGoalInput = page.getByLabel(/Core Goal/i);
+        await coreGoalInput.fill('Create a contact form');
+        
+        const saveButton = page.getByRole('button', { name: /Save & Generate/i });
+        await saveButton.click();
+        
+        await page.waitForSelector('.generated-form', { state: 'visible' });
+        
+        // Switch to preview mode
+        const previewTab = page.getByRole('tab', { name: /Preview/i });
+        await previewTab.click();
+        
+        // Fill and submit the form
+        const nameInput = page.getByLabel(/Name/i);
+        await nameInput.fill('John Doe');
+        
+        const emailInput = page.getByLabel(/Email/i);
+        await emailInput.fill('john@example.com');
+        
+        const submitButton = page.getByRole('button', { name: /Submit/i });
+        await submitButton.click();
+        
+        // Verify success message
+        const successMessage = page.getByText(/Form submitted successfully/i);
+        await expect(successMessage).toBeVisible();
+    });
+
+    test('Generate & filter directory', async ({ page }) => {
+        // Add component first
+        const initialCount = await getComponentCount(page);
+        await enhancedDragAndDrop(page, WIDGETS.AI_FEATURE.package, {
+            usePackageSelection: true,
+            verbose: false
+        });
+        
+        const componentAdded = await waitForComponentAdded(page, initialCount);
+        expect(componentAdded).toBe(true);
+        
+        // Generate directory listing
+        const frame = editAppPage.getPreviewFrame();
+        const aiComponent = frame.locator('[data-widget-package="com.fliplet.ai-feature-dev"]');
+        await aiComponent.click();
+        
+        await page.waitForSelector('.fl-widget-instance-settings');
+        
+        const enhancePromptButton = page.getByRole('button', { name: /Enhance Prompt/i });
+        await enhancePromptButton.click();
+        
+        const coreGoalInput = page.getByLabel(/Core Goal/i);
+        await coreGoalInput.fill('Create a company directory listing');
+        
+        const saveButton = page.getByRole('button', { name: /Save & Generate/i });
+        await saveButton.click();
+        
+        await page.waitForSelector('.generated-directory', { state: 'visible' });
+        
+        // Switch to preview mode
+        const previewTab = page.getByRole('tab', { name: /Preview/i });
+        await previewTab.click();
+        
+        // Test filtering
+        const filterInput = page.getByPlaceholder(/Filter by department/i);
+        await filterInput.fill('Engineering');
+        
+        // Verify filtered results
+        const filteredResults = page.locator('.directory-item');
+        await expect(filteredResults).toHaveCount(1);
+    });
+
+    test('Trigger AI-query button', async ({ page }) => {
+        // Add component first
+        const initialCount = await getComponentCount(page);
+        await enhancedDragAndDrop(page, WIDGETS.AI_FEATURE.package, {
+            usePackageSelection: true,
+            verbose: false
+        });
+        
+        const componentAdded = await waitForComponentAdded(page, initialCount);
+        expect(componentAdded).toBe(true);
+        
+        // Generate AI-query functionality
+        const frame = editAppPage.getPreviewFrame();
+        const aiComponent = frame.locator('[data-widget-package="com.fliplet.ai-feature-dev"]');
+        await aiComponent.click();
+        
+        await page.waitForSelector('.fl-widget-instance-settings');
+        
+        const enhancePromptButton = page.getByRole('button', { name: /Enhance Prompt/i });
+        await enhancePromptButton.click();
+        
+        const coreGoalInput = page.getByLabel(/Core Goal/i);
+        await coreGoalInput.fill('Create a button that generates AI content');
+        
+        const saveButton = page.getByRole('button', { name: /Save & Generate/i });
+        await saveButton.click();
+        
+        await page.waitForSelector('.generated-code', { state: 'visible' });
+        
+        // Switch to preview mode
+        const previewTab = page.getByRole('tab', { name: /Preview/i });
+        await previewTab.click();
+        
+        // Click the AI query button
+        const aiQueryButton = page.getByRole('button', { name: /Generate Content/i });
+        await aiQueryButton.click();
+        
+        // Wait for content to appear
+        await page.waitForSelector('.ai-generated-content', { state: 'visible' });
+        
+        // Verify content was generated
+        const generatedContent = page.locator('.ai-generated-content');
+        await expect(generatedContent).toBeVisible();
+    });
+
+    test('See expected toast messages', async ({ page }) => {
+        // Add component first
+        const initialCount = await getComponentCount(page);
+        await enhancedDragAndDrop(page, WIDGETS.AI_FEATURE.package, {
+            usePackageSelection: true,
+            verbose: false
+        });
+        
+        const componentAdded = await waitForComponentAdded(page, initialCount);
+        expect(componentAdded).toBe(true);
+        
+        // Test empty prompt toast
+        const frame = editAppPage.getPreviewFrame();
+        const aiComponent = frame.locator('[data-widget-package="com.fliplet.ai-feature-dev"]');
+        await aiComponent.click();
+        
+        await page.waitForSelector('.fl-widget-instance-settings');
+        
+        const enhancePromptButton = page.getByRole('button', { name: /Enhance Prompt/i });
+        await enhancePromptButton.click();
+        
+        const saveButton = page.getByRole('button', { name: /Save & Generate/i });
+        await saveButton.click();
+        
+        // Verify error toast appears
+        const errorToast = page.getByText(/Please enter a prompt/i);
+        await expect(errorToast).toBeVisible();
+    });
+
+    test('Delete component after test (cleanup)', async ({ page }) => {
+        // Add component first
+        const initialCount = await getComponentCount(page);
+        await enhancedDragAndDrop(page, WIDGETS.AI_FEATURE.package, {
+            usePackageSelection: true,
+            verbose: false
+        });
+        
+        const componentAdded = await waitForComponentAdded(page, initialCount);
+        expect(componentAdded).toBe(true);
+        
+        // Open Screen Structure tab
+        const screenStructureTab = page.locator('[data-tool="screen-structure"], .screen-structure-tab, [title*="Screen structure"]');
+        await screenStructureTab.click();
+        
+        // Find and delete the AI component from screen structure
+        const aiComponentInStructure = page.getByText('AI feature DEV');
+        await expect(aiComponentInStructure).toBeVisible();
+        
+        // Right-click to open context menu and select delete
+        await aiComponentInStructure.click({ button: 'right' });
+        const deleteOption = page.getByText(/delete/i);
+        await deleteOption.click();
+        
+        // Verify component was removed
+        const afterDeleteCount = await getComponentCount(page);
+        expect(afterDeleteCount).toBe(initialCount);
+        
+        // Verify component is not in iframe
+        const frame = editAppPage.getPreviewFrame();
+        const aiComponentInIframe = frame.locator('[data-widget-package="com.fliplet.ai-feature-dev"]');
+        await expect(aiComponentInIframe).not.toBeVisible();
+    });
+}); 

@@ -1,0 +1,98 @@
+import { test, expect } from '@playwright/test';
+import { StudioAppsPage } from '../../page-objects/apps/studio-apps.page';
+import { EditAppPage } from '../../page-objects/apps/edit-app.page';
+import { ensureAIComponentOnScreen, openAIComponentSettings, getPromptInput, createNewDataSourceViaComponent, fillEnhancedPromptSections, configureSecurityRuleAndAcknowledge } from '../../core';
+import { enhancedPromptExamples } from '../../fixtures/ai-prompts';
+
+test.describe('AI Feature - User Journeys', () => {
+  let studioAppsPage: StudioAppsPage;
+  let editAppPage: EditAppPage;
+
+  test.beforeEach(async ({ page }) => {
+    studioAppsPage = new StudioAppsPage(page);
+    editAppPage = new EditAppPage(page);
+
+    await studioAppsPage.goto();
+
+    const appLink = page.getByRole('link', { name: /AI-Test-App/ });
+    await appLink.waitFor({ state: 'visible' });
+    await appLink.click();
+
+    await editAppPage.waitForPageLoad();
+  });
+
+  // helpers moved to core/ai-component.helpers for DRY and SoC
+
+  test('User journey: create DS → enhance prompt → generate code (form example)', async ({ page }) => {
+    // Arrange
+    await ensureAIComponentOnScreen(page, editAppPage);
+    await openAIComponentSettings(page, editAppPage);
+
+    const dsName = `Test_Users_${Date.now()}`;
+    await createNewDataSourceViaComponent(page, dsName);
+
+    // Configure security rule and acknowledge modal if present
+    await configureSecurityRuleAndAcknowledge(page);
+
+    // Type a base prompt (optional as Enhance Prompt will augment)
+    const promptInput = await getPromptInput(page);
+    await promptInput.fill('Create a form to collect essential user data and save to data source.');
+
+    await fillEnhancedPromptSections(page, enhancedPromptExamples[0]);
+
+    // Act: Generate
+    const saveGenerateButton = page.getByRole('button', { name: /Save & Generate/i });
+    await expect(saveGenerateButton).toBeEnabled();
+    await saveGenerateButton.click();
+
+    // Assert: Code generated and preview available
+    const generatedCode = page.locator('.generated-code');
+    await expect(generatedCode).toBeVisible();
+
+    const previewTab = page.getByRole('tab', { name: /Preview/i });
+    await previewTab.click();
+
+    // Basic UI smoke checks based on form example
+    await expect(page.getByRole('button', { name: /Submit|Sign Up|Save/i })).toBeVisible();
+  });
+
+  test('User journey: enhance prompt → generate code (dashboard pie chart example)', async ({ page }) => {
+    // Arrange
+    await ensureAIComponentOnScreen(page, editAppPage);
+    await openAIComponentSettings(page, editAppPage);
+
+    const promptInput = await getPromptInput(page);
+    await promptInput.fill('Create a dashboard with a pie chart breakdown by title and department.');
+
+    await fillEnhancedPromptSections(page, enhancedPromptExamples[1]);
+
+    // Act
+    const saveGenerateButton = page.getByRole('button', { name: /Save & Generate/i });
+    await saveGenerateButton.click();
+
+    // Assert
+    const generatedCode = page.locator('.generated-code');
+    await expect(generatedCode).toBeVisible();
+  });
+
+  test('User journey: enhance prompt → generate code (mobile list example)', async ({ page }) => {
+    // Arrange
+    await ensureAIComponentOnScreen(page, editAppPage);
+    await openAIComponentSettings(page, editAppPage);
+
+    const promptInput = await getPromptInput(page);
+    await promptInput.fill('Create a mobile list view for users with email, first name, last name and title.');
+
+    await fillEnhancedPromptSections(page, enhancedPromptExamples[2]);
+
+    // Act
+    const saveGenerateButton = page.getByRole('button', { name: /Save & Generate/i });
+    await saveGenerateButton.click();
+
+    // Assert
+    const generatedCode = page.locator('.generated-code');
+    await expect(generatedCode).toBeVisible();
+  });
+});
+
+

@@ -1,0 +1,5 @@
+module.exports = {
+  USER_PROFILE_DATA: 'User profile data',
+  APP_STORAGE_VARIABLE: 'App storage variable',
+  LINK_QUERY_PARAMETER: 'Link query parameter',
+};

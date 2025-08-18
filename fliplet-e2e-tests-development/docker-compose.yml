@@ -1,0 +1,8 @@
+chrome:
+    image: dockeridqa/selenium-chrome-with-file:1.5.0 # Manually created and published to Docker Hub image which contains selenium image and files for uploading during tests
+    ports:
+      - "4444:4444"
+    volumes:
+      - /dev/shm:/dev/shm # Mitigates the Chromium issue described at https://code.google.com/p/chromium/issues/detail?id=519952
+      - .:/files
+
