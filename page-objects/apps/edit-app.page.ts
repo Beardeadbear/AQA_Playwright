@@ -80,8 +80,13 @@ export class EditAppPage {
 
   /**
    * Open the Add Components panel
+   * Closes any other open side panels first to avoid conflicts
    */
   async openAddComponents(): Promise<void> {
+    // Close any other open side views first
+    await this.closeSideBarOverlay();
+    
+    // Click the Add Components tab
     await this.addComponentsTab.click();
     await expect(this.componentsSidebar).toBeVisible();
   }
@@ -93,9 +98,10 @@ export class EditAppPage {
    * Uses explicit waits instead of hardcoded timeouts
    */
   async closeSideBarOverlay(): Promise<void> {
+    // First, close any open side views that have close buttons
     const openSideViews = this.page.locator('.side-view');
     if (await openSideViews.count() > 0) {
-      const closeButtons = openSideViews.locator('.closeSideView, .close, [aria-label="Close"]');
+      const closeButtons = openSideViews.locator('.closeSideView, .close, [aria-label="Close"], .btn-close');
       for (let i = 0; i < await closeButtons.count(); i++) {
         const button = closeButtons.nth(i);
         if (await button.isVisible()) {
@@ -104,6 +110,14 @@ export class EditAppPage {
           await expect(openSideViews.nth(i)).not.toBeVisible();
         }
       }
+    }
+    
+    // Also close any open side panels by clicking the active tab again (toggle behavior)
+    const activeTab = this.page.locator('.side-nav .btn.active');
+    if (await activeTab.count() > 0) {
+      await activeTab.first().click();
+      // Wait for the panel to close using explicit wait
+      await expect(openSideViews.first()).not.toBeVisible();
     }
   }
 
